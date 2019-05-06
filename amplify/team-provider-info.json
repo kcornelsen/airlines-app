@@ -1,0 +1,19 @@
+{
+    "demo": {
+        "awscloudformation": {
+            "AuthRoleName": "airline-demo-20190506143412-authRole",
+            "UnauthRoleArn": "arn:aws:iam::501952225400:role/airline-demo-20190506143412-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::501952225400:role/airline-demo-20190506143412-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "airline-demo-20190506143412-deployment",
+            "UnauthRoleName": "airline-demo-20190506143412-unauthRole",
+            "StackName": "airline-demo-20190506143412",
+            "StackId": "arn:aws:cloudformation:us-east-1:501952225400:stack/airline-demo-20190506143412/f7943b60-6fc8-11e9-bc8e-0eb2970e4f5e"
+        },
+        "categories": {
+            "auth": {
+                "cognitob4f992f5": {}
+            }
+        }
+    }
+}
