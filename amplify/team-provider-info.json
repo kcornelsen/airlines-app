@@ -1,14 +1,14 @@
 {
-    "demo": {
+    "test": {
         "awscloudformation": {
-            "AuthRoleName": "airline-demo-20190506143412-authRole",
-            "UnauthRoleArn": "arn:aws:iam::501952225400:role/airline-demo-20190506143412-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::501952225400:role/airline-demo-20190506143412-authRole",
+            "AuthRoleName": "airline-test-20190506184220-authRole",
+            "UnauthRoleArn": "arn:aws:iam::831333969064:role/airline-test-20190506184220-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::831333969064:role/airline-test-20190506184220-authRole",
             "Region": "us-east-1",
-            "DeploymentBucketName": "airline-demo-20190506143412-deployment",
-            "UnauthRoleName": "airline-demo-20190506143412-unauthRole",
-            "StackName": "airline-demo-20190506143412",
-            "StackId": "arn:aws:cloudformation:us-east-1:501952225400:stack/airline-demo-20190506143412/f7943b60-6fc8-11e9-bc8e-0eb2970e4f5e"
+            "DeploymentBucketName": "airline-test-20190506184220-deployment",
+            "UnauthRoleName": "airline-test-20190506184220-unauthRole",
+            "StackName": "airline-test-20190506184220",
+            "StackId": "arn:aws:cloudformation:us-east-1:831333969064:stack/airline-test-20190506184220/a17ef300-6feb-11e9-8ccf-0aa7a65c926c"
         },
         "categories": {
             "auth": {
