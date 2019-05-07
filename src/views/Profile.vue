@@ -68,8 +68,7 @@ export default {
     ...mapState({
       user: state => state.profile.user,
       loyalty: state => state.loyalty.loyalty
-    }),
-    ...mapGetters("profile", ["isLoggedIn"])
+    })
   },
   methods: {
     choosePreference(option) {
@@ -118,16 +117,9 @@ export default {
         .then(choice => this.$q.notify(`${option}: ${choice}`))
         .catch(() => "No option selected");
     }
-
   },
   async mounted() {
-    // authentication guards prevent authenticated users to view Profile
-    // however, the component doesn't stop from rendering asynchronously
-    // this guarantees we attempt talking to Loyalty service
-    // if our authentication guards && profile module have an user in place
-    if (this.isLoggedIn) {
-      await this.$store.dispatch("loyalty/fetchLoyalty");
-    }
+    await this.$store.dispatch("loyalty/fetchLoyalty");
   }
 };
 </script>

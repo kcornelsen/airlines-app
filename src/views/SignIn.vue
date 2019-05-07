@@ -38,9 +38,7 @@
       </q-field>
     </div>
     <div class="wrapper">
-      <q-btn @click="signIn" class="cta__button" color="secondary" label="Sign In">
-        <q-icon class="cta__button--direction" name="keyboard_arrow_right" size="2.6rem"/>
-      </q-btn>
+      <q-btn @click="signIn" class="cta__button" color="secondary" label="Sign In"></q-btn>
     </div>
   </q-page>
 </template>

@@ -7,7 +7,6 @@ import FlightResults from "./views/FlightResults.vue";
 import FlightSelection from "./views/FlightSelection.vue";
 import Bookings from "./views/Bookings.vue";
 import SignIn from "./views/SignIn.vue";
-import store from "./store";
 
 Vue.use(Router);
 
@@ -17,13 +16,6 @@ const router = new Router({
             path: "/",
             component: DefaultLayout,
             children: [
-                // {
-                //     path: "",
-                //     name: "home",
-                //     component: SearchFlights,
-                //     alias: "/search",
-                //     meta: { requiresAuth: true }
-                // },
                 {
                     path: "/search",
                     name: "search",
