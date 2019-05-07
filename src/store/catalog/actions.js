@@ -20,7 +20,7 @@ import axios from "axios";
  * // exerpt from src/views/FlightResults.vue
  * async mounted() {
  * // @ts-ignore
- * if (this.isAuthenticated) {
+ * if (this.isLoggedIn) {
  *    await this.$store.dispatch("catalog/fetchFlights", {
  *       date: this.date,
  *       departure: this.departure,
@@ -66,7 +66,7 @@ export function fetchFlights({ commit }, { date, departure, arrival }) {
  * @example
  * // exerpt from src/views/FlightSelection.vue
  * async beforeMount() {
- *    if (this.isAuthenticated) {
+ *    if (this.isLoggedIn) {
  *        if (!this.flight) {
  *            this.selectedFlight = await this.$store.dispatch("catalog/fetchByFlightNumber", {
  *              date: this.date,

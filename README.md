@@ -1,28 +1,18 @@
-# airline-vue
+# airlines-app
 
-## Project setup
+## development 
+prerequisites 
+* Amplify CLI - https://aws-amplify.github.io/docs/
+* 
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
+
+### Compiles and hot-reloads for development
 ```
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
 ```
 
 ### Customize configuration

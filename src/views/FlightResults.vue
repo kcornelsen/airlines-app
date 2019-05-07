@@ -147,12 +147,7 @@ export default {
     };
   },
   async mounted() {
-    /** authentication guards prevent authenticated users to view Flights
-     * however, the component doesn't stop from rendering asynchronously
-     * this guarantees we attempt talking to Catalog service
-     * if our authentication guards && profile module have an user in place
-     */
-    if (this.isAuthenticated) {
+
       await this.$store.dispatch("catalog/fetchFlights", {
         date: this.date,
         departure: this.departure,
@@ -160,7 +155,6 @@ export default {
       });
 
       this.filteredFlights = this.sortByDeparture(this.flights);
-    }
   },
   methods: {
     /**
@@ -193,7 +187,6 @@ export default {
   /**
    * @param {Flight} flights - Flights state from Flights module
    * @param {boolean} loading - Loader state used to control Flight Loader when fetching flights
-   * @param {boolean} isAuthenticated - Getter from Profile module
    * @param {number} maximumPrice - Maximum ticket price calculated across all available flights
    * @param {number} minimumPrice - Minimum ticket price calculated across all available flights
    */
@@ -202,7 +195,6 @@ export default {
       flights: state => state.catalog.flights,
       loading: state => state.catalog.loading
     }),
-    ...mapGetters("profile", ["isAuthenticated"]),
     maximumPrice: function() {
       return Math.max(...this.flights.map(filter => filter.ticketPrice), 500);
     },

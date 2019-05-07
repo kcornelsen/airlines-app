@@ -7,23 +7,19 @@
     />
     <div class="flights">
       <div class="heading">
-        <div class="q-headline text-primary text-center">
-          Review your selection
-        </div>
+        <div class="q-headline text-primary text-center">Review your selection</div>
         <div class="loader" v-if="loading">
           <flight-loader></flight-loader>
         </div>
       </div>
-      <flight-card v-if="this.selectedFlight" :details="this.selectedFlight" />
+      <flight-card v-if="this.selectedFlight" :details="this.selectedFlight"/>
     </div>
     <div class="form__payment">
       <div class="text-center">
-        <div class="form__header q-pt-md q-headline text-primary text-center">
-          Payment details
-        </div>
+        <div class="form__header q-pt-md q-headline text-primary text-center">Payment details</div>
         <div class="form">
           <form>
-            <input type="hidden" name="token" />
+            <input type="hidden" name="token">
             <div class="group">
               <label for="name">
                 <span class="text-secondary">Name</span>
@@ -34,7 +30,7 @@
                   placeholder="Name on card"
                   class="form__input field"
                   required
-                />
+                >
               </label>
               <label>
                 <span class="text-secondary">Country</span>
@@ -59,11 +55,11 @@
                   placeholder="Postcode"
                   class="form__input field"
                   required
-                />
+                >
               </label>
               <label>
                 <span class="text-secondary">Card number</span>
-                <div id="card-number-element" class="form__stripe field"></div>
+                <div id="card-number-element" class="form__stripe field" value="4242424242424242"></div>
               </label>
               <label>
                 <span class="text-secondary">Expiry date</span>
@@ -75,9 +71,10 @@
               </label>
             </div>
             <div class="outcome">
-              <div class="error text-bold text-secondary" v-if="token.error">
-                {{ token.error.message }}
-              </div>
+              <div
+                class="error text-bold text-secondary"
+                v-if="token.error"
+              >{{ token.error.message }}</div>
             </div>
           </form>
         </div>
@@ -88,11 +85,7 @@
           label="Agree and pay now"
           :disable="$v.form.$invalid || form.isCardInvalid"
         >
-          <q-icon
-            class="cta__button--direction"
-            name="keyboard_arrow_right"
-            size="2.6rem"
-          />
+          <q-icon class="cta__button--direction" name="keyboard_arrow_right" size="2.6rem"/>
         </q-btn>
       </div>
     </div>
@@ -150,33 +143,24 @@ export default {
     }
   },
   /**
-   * @param {boolean} isAuthenticated - Getter from Profile module
    * @param {boolean} loading - Loader state used to control Flight Loader when fetching flights
    */
   computed: {
-    ...mapGetters("profile", ["isAuthenticated"]),
     ...mapState({
       loading: state => state.catalog.loading
     })
   },
   async beforeMount() {
-    /** authentication guards prevent authenticated users to view Flights
-     * however, the component doesn't stop from rendering asynchronously
-     * this guarantees we attempt talking to Catalog service
-     * if our authentication guards && profile module have an user in place
-     */
-    if (this.isAuthenticated) {
-      if (!this.flight) {
-        this.selectedFlight = await this.$store.dispatch(
-          "catalog/fetchByFlightNumber",
-          {
-            date: this.date,
-            departure: this.departure,
-            arrival: this.arrival,
-            flightNumber: parseInt(this.flightNumber)
-          }
-        );
-      }
+    if (!this.flight) {
+      this.selectedFlight = await this.$store.dispatch(
+        "catalog/fetchByFlightNumber",
+        {
+          date: this.date,
+          departure: this.departure,
+          arrival: this.arrival,
+          flightNumber: parseInt(this.flightNumber)
+        }
+      );
     }
   },
   mounted() {
@@ -339,75 +323,91 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '~variables'
+@import '~variables';
 
-.flights
-  margin-top $content-toolbar-margin
+.flights {
+  margin-top: $content-toolbar-margin;
+}
 
-.q-headline
-  margin-top 2rem
+.q-headline {
+  margin-top: 2rem;
+}
 
-.form__payment, .form__header
-  background $grey-2
+.form__payment, .form__header {
+  background: $grey-2;
+}
 
-form
-  width auto
-  margin 20px
+form {
+  width: auto;
+  margin: 20px;
+}
 
-.group
-  background white
-  box-shadow 0 7px 14px 0 rgba(49, 49, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.08)
-  border-radius 4px
-  margin-bottom 20px
+.group {
+  background: white;
+  box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
 
-label
-  position relative
-  font-weight 300
-  height 40px
-  line-height 40px
-  display flex
+label {
+  position: relative;
+  font-weight: 300;
+  height: 40px;
+  line-height: 40px;
+  display: flex;
+}
 
-.group label:not(:last-child)
-  border-bottom 1px solid #F0F5FA
+.group label:not(:last-child) {
+  border-bottom: 1px solid #F0F5FA;
+}
 
-label > span
-  width 120px
-  text-align right
-  margin-right 0.4rem
+label > span {
+  width: 120px;
+  text-align: right;
+  margin-right: 0.4rem;
+}
 
-.field
-  background transparent
-  font-weight 300
-  border none
-  color #31325F
-  outline none
-  flex 1
-  padding-right 10px
-  padding-left 10px
-  cursor text
+.field {
+  background: transparent;
+  font-weight: 300;
+  border: none;
+  color: #31325F;
+  outline: none;
+  flex: 1;
+  padding-right: 10px;
+  padding-left: 10px;
+  cursor: text;
+}
 
-.field::-webkit-input-placeholder
-  color #CFD7E0
+.field::-webkit-input-placeholder {
+  color: #CFD7E0;
+}
 
-.field::-moz-placeholder
-  color #CFD7E0
+.field::-moz-placeholder {
+  color: #CFD7E0;
+}
 
-.outcome
-  float left
-  width 100%
-  padding-top 8px
-  min-height 24px
-  text-align center
+.outcome {
+  float: left;
+  width: 100%;
+  padding-top: 8px;
+  min-height: 24px;
+  text-align: center;
+}
 
-.error
-  font-size 20px
+.error {
+  font-size: 20px;
+}
 
-.error.visible
-  display inline
+.error.visible {
+  display: inline;
+}
 
-.separator
-  box-shadow 0 7px 14px 0 rgba(49, 49, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.08)
+.separator {
+  box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
+}
 
-.loader
-  width 150%
+.loader {
+  width: 150%;
+}
 </style>

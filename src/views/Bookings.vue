@@ -46,24 +46,17 @@ export default {
     BookingFlight
   },
   async mounted() {
-    /** authentication guards prevent authenticated users to view Bookings
-     * however, the component doesn't stop from rendering asynchronously
-     * this guarantees we attempt talking to Booking service
-     * if our authentication guards && profile module have an user in place
-     */
-    if (this.isAuthenticated) {
-      await this.$store.dispatch("bookings/fetchBooking");
-    }
+
+    await this.$store.dispatch("bookings/fetchBooking");
+    
   },
   /**
    * @param {Booking} bookings - Bookings state from Bookings module
-   * @param {boolean} isAuthenticated - Getter from Profile module
    */
   computed: {
     ...mapState({
       bookings: state => state.bookings.bookings
-    }),
-    ...mapGetters("profile", ["isAuthenticated"])
+    })
   }
 };
 </script>

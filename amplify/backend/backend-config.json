@@ -1,10 +1,5 @@
 {
-	"auth": {
-		"cognitob4f992f5": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation"
-		}
-	},
+	"auth": {},
 	"hosting": {
 		"S3AndCloudFront": {
 			"service": "S3AndCloudFront",

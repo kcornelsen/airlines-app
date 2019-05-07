@@ -46,7 +46,9 @@
           </div>
         </div>
       </div>
-      <amplify-sign-out class="Form--signout"></amplify-sign-out>
+      <div class="wrapper">
+        <q-btn @click="signOut" class="cta__button" color="secondary" label="Sign Out"></q-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -67,7 +69,7 @@ export default {
       user: state => state.profile.user,
       loyalty: state => state.loyalty.loyalty
     }),
-    ...mapGetters("profile", ["isAuthenticated"])
+    ...mapGetters("profile", ["isLoggedIn"])
   },
   methods: {
     choosePreference(option) {
@@ -116,27 +118,14 @@ export default {
         .then(choice => this.$q.notify(`${option}: ${choice}`))
         .catch(() => "No option selected");
     }
+
   },
   async mounted() {
-    /** Amplify clears out cookies and any storage that can map to users
-     * However it is on us to clear out our own store and redirect to Auth
-     * If customer decides to sign out we redirect it to home, and subsequentially to authentication
-     */
-    AmplifyEventBus.$on("authState", info => {
-      if (info === "signedOut") {
-        this.$store
-          .dispatch("profile/getSession")
-          .catch(
-            this.$router.push({ name: "auth", query: { redirectTo: "home" } })
-          );
-      }
-    });
-
     // authentication guards prevent authenticated users to view Profile
     // however, the component doesn't stop from rendering asynchronously
     // this guarantees we attempt talking to Loyalty service
     // if our authentication guards && profile module have an user in place
-    if (this.isAuthenticated) {
+    if (this.isLoggedIn) {
       await this.$store.dispatch("loyalty/fetchLoyalty");
     }
   }

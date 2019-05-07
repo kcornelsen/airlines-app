@@ -16,16 +16,16 @@ import { Loading } from "quasar";
  * @example
  * // exerpt from src/views/Profile.vuw
  * async mounted() {
- *    if (this.isAuthenticated) {
+ *    if (this.isLoggedIn) {
  *        await this.$store.dispatch("loyalty/fetchLoyalty");
  *    }
  * }
  */
 export function fetchLoyalty({ commit }) {
   return new Promise(async (resolve, reject) => {
-    Loading.show({
-      message: "Loading profile..."
-    });
+    // Loading.show({
+    //   message: "Loading profile..."
+    // });
 
     try {
       const { data: loyaltyData } = await axios.get("/mocks/loyalty.json");
