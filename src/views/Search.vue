@@ -5,18 +5,42 @@
         <div class="q-display-1">Where next?</div>
       </div>
     </div>
+
     <div class="search__options q-pa-sm">
+      
+      <div class="row search__options--input">
+        <q-field
+        class="col search__options--input booking__option"
+      >
+        <q-select
+          inverted
+          v-model="bookingOption"
+          radio
+          :options="bookingOptions"
+        />
+        </q-field>
+        <q-field
+        class="col search__options--input passangers"
+      >
+        <q-input
+          v-model.number="numberOfPassengers"
+          max="10"
+          min="1"
+          type="number"
+          inverted
+          align = "center"
+          prefix="passangers  : "
+        />
+        </q-field>
+      </div>
+
       <q-field
         class="home-icons search__options--input search__departure"
         icon="flight_takeoff"
         icon-color="primary"
         :label-width="8"
       >
-        <q-input
-          class="search__departure"
-          v-model="departureCity"
-          stack-label="Departure airport"
-        >
+        <q-input class="search__departure" v-model="departureCity" stack-label="Departure airport">
           <q-autocomplete
             class="search__departure--suggestion text-bold"
             :min-characters="3"
@@ -32,11 +56,7 @@
         icon-color="primary"
         :label-width="8"
       >
-        <q-input
-          class="search__arrival"
-          v-model="arrivalCity"
-          stack-label="Arrival airport"
-        >
+        <q-input class="search__arrival" v-model="arrivalCity" stack-label="Arrival airport">
           <q-autocomplete
             class="search__arrival--suggestion text-bold"
             :min-characters="3"
@@ -60,6 +80,7 @@
         />
       </q-field>
       <q-field
+        v-if="bookingOption === 'round-trip'"
         icon="calendar_today"
         icon-color="primary"
         class="return__date search__options--input"
@@ -85,11 +106,7 @@
             (!$v.arrivalCity.isAirport || $v.arrivalCity.$invalid)
         "
       >
-        <q-icon
-          class="cta__button--direction"
-          name="keyboard_arrow_right"
-          size="2.6rem"
-        />
+        <q-icon class="cta__button--direction" name="keyboard_arrow_right" size="2.6rem"/>
       </q-btn>
     </div>
   </q-page>
@@ -160,8 +177,19 @@ export default {
       arrivalCity: "LAS",
       departureDate: new Date(),
       returnDate: new Date(),
-      suggestionList: parseAirports()
-
+      suggestionList: parseAirports(),
+      numberOfPassengers: 1,
+      bookingOption: "one-way",
+      bookingOptions: [
+        {
+          label: "one-way",
+          value: "one-way"
+        },
+        {
+          label: "round-trip",
+          value: "round-trip"
+        }
+      ]
     };
   },
   methods: {
@@ -201,10 +229,11 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '~variables'
+@import '~variables';
 
-.search__options--input
-  padding 0.3rem 1.5rem
-  max-width 30rem
-  margin auto
+.search__options--input {
+  padding: 0.3rem 1.5rem;
+  max-width: 30rem;
+  margin: auto;
+}
 </style>
