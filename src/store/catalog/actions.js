@@ -34,8 +34,39 @@ export function fetchFlights({ commit }, { date, departure, arrival }) {
   return new Promise(async (resolve, reject) => {
     commit("SET_LOADER", true);
     try {
-      const { data: flightData } = await axios.get("/mocks/flights.json");
-      const flights = flightData.map(flight => new Flight(flight));
+   
+      var departureDate = new Date()
+      departureDate.setHours(6);
+      var arrivalDate = new Date();
+      arrivalDate.setHours(10);
+      arrivalDate.setMinutes(15);
+
+      let flights = []
+      var numberOfFlightsReturn = Math.floor(Math.random() * 6) + 1;
+      for(var i = 0; i < numberOfFlightsReturn; i++){
+
+        departureDate.setHours(departureDate.getHours()+1);
+        arrivalDate.setHours(arrivalDate.getHours()+1);
+        arrivalDate.setMinutes(arrivalDate.getMinutes()+5);
+        let flight = new Flight({
+          arrivalAirportCode:arrival,
+          arrivalAirportName:"",
+          arrivalCity:"",
+          arrivalDate: arrivalDate.toString(),
+          arrivalLocale:"Europe/Madrid",
+          departureAirportCode:departure,
+          departureAirportName:"",
+          departureCity:"",
+          departureDate:departureDate.toString(),
+          departureLocale:"Europe/London",
+          flightNumber:1810+i,
+          id:i.toString(),
+          ticketCurrency:"USD",
+          ticketPrice:Math.floor(Math.random()*(500-100+1)+100) 
+          })
+          flights.push(flight)
+      }
+
 
       commit("SET_FLIGHTS", flights);
       commit("SET_LOADER", false);

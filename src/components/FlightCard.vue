@@ -73,7 +73,7 @@
               <q-card-separator class="flight__separator" />
               <div class="col flight__left-details" v-if="details.ticketPrice">
                 <div class="uppercase text-secondary flight__price">
-                  {{ details.ticketPrice }} eur
+                  {{ details.ticketPrice }} {{details.ticketCurrency}}
                 </div>
               </div>
               <div class="col flight__center-details"></div>
@@ -121,7 +121,7 @@ export default {
    *    "arrivalCity": "Madrid",
    *    "arrivalLocale": "Europe/Madrid",
    *    "ticketPrice": 400,
-   *    "ticketCurrency": "EUR",
+   *    "ticketCurrency": ""USD",
    *    "flightNumber": 1812
    * })
    * 
