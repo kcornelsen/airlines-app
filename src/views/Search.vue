@@ -49,13 +49,26 @@
       <q-field
         icon="calendar_today"
         icon-color="primary"
-        class="search__date search__options--input"
+        class="depart__date search__options--input"
       >
         <q-datetime
           v-model="departureDate"
           type="date"
           format="ddd, DD MMM YYYY"
-          stack-label="Pick a date"
+          stack-label="Departure date"
+          :min="new Date()"
+        />
+      </q-field>
+      <q-field
+        icon="calendar_today"
+        icon-color="primary"
+        class="return__date search__options--input"
+      >
+        <q-datetime
+          v-model="returnDate"
+          type="date"
+          format="ddd, DD MMM YYYY"
+          stack-label="Return date"
           :min="new Date()"
         />
       </q-field>
@@ -143,10 +156,12 @@ export default {
        * @param {object} departureDate - Departure date chosen by the customer
        * @param {object} suggestionList - Parsed list of airports offered as auto-suggestion
        */
-      departureCity: "",
-      arrivalCity: "",
+      departureCity: "SFO",
+      arrivalCity: "LAS",
       departureDate: new Date(),
+      returnDate: new Date(),
       suggestionList: parseAirports()
+
     };
   },
   methods: {
