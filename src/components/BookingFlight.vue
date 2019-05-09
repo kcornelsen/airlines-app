@@ -6,7 +6,7 @@
     <BookingCard
       ref="card"
       :reference="bookingID"
-      name="Simon Thulbourn"
+      name="Bruce Wayne"
       :departureDate="flight.departureDate"
       :departureAirportName="flight.departureAirportName"
       :departureIata="flight.departureAirportCode"

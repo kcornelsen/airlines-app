@@ -18,11 +18,6 @@ const router = new Router({
             component: DefaultLayout,
             children: [
                 {
-                    path: "/search",
-                    name: "search",
-                    component: SearchFlights
-                },
-                {
                     name: "searchResults",
                     path: "/search/results",
                     component: FlightResults,

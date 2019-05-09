@@ -35,6 +35,20 @@ export default {
     return {
       authConfig: {
         signUpConfig: {
+          signUpFields: [
+            {
+              label: "First name",
+              key: "given_name",
+              required: true,
+              displayOrder: 0
+            },
+            {
+              label: "Family name",
+              key: "family_name",
+              required: true,
+              displayOrder: 1
+            }
+          ],
           hiddenDefaults: ["phone_number"]
         }
       }

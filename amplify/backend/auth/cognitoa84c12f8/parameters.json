@@ -22,10 +22,17 @@
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": "360",
     "userpoolClientWriteAttributes": [
-        "email"
+        "email",
+        "family_name",
+        "given_name",
+        "name"
     ],
     "userpoolClientReadAttributes": [
-        "email"
+        "email",
+        "family_name",
+        "given_name",
+        "name",
+        "profile"
     ],
     "mfaLambdaRole": "cognitoa84c12f8_totp_lambda_role",
     "mfaLambdaLogPolicy": "cognitoa84c12f8_totp_lambda_log_policy",
@@ -34,7 +41,7 @@
     "userpoolClientLambdaRole": "cognitoa84c12f8_userpoolclient_lambda_role",
     "userpoolClientLogPolicy": "cognitoa84c12f8_userpoolclient_lambda_log_policy",
     "userpoolClientLambdaPolicy": "cognitoa84c12f8_userpoolclient_lambda_iam_policy",
-    "userpoolClientSetAttributes": false,
+    "userpoolClientSetAttributes": true,
     "useDefault": "manual",
     "authSelections": "userPoolOnly",
     "resourceName": "cognitoa84c12f8",

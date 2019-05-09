@@ -72,8 +72,11 @@
             >
               <q-card-separator class="flight__separator" />
               <div class="col flight__left-details" v-if="details.ticketPrice">
-                <div class="uppercase text-secondary flight__price">
-                  {{ details.ticketPrice }} {{details.ticketCurrency}}
+                <div class="uppercase text-secondary flight__price" label="per person">
+                  ${{ details.ticketPrice }} {{details.ticketCurrency}}
+                </div>
+                <div class="q-ml-xs q-caption text-bold">
+                  per person
                 </div>
               </div>
               <div class="col flight__center-details"></div>
