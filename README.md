@@ -11,12 +11,12 @@ $ npm run serve
 ```
 testing endpoint <localhost:8080>
 
-----------
-## amplify consule 
+## deployment 
 currently deployed via AWS Amplify Consule
-https://console.aws.amazon.com/amplify/home?region=us-east-1#/
 
------------
+[Amplify Consule](https://console.aws.amazon.com/amplify/home?region=us-east-1#/)
+
+
 ## test accounts
 
 | username | password |
@@ -25,10 +25,6 @@ https://console.aws.amazon.com/amplify/home?region=us-east-1#/
 | spiderman | spiderman |
 | flash | flash |
 | deadpool | deadpool |
-| ------ | ------ |
-
-
-----------
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
