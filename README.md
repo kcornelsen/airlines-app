@@ -23,8 +23,8 @@ currently deployed via AWS Amplify Consule
 | ------ | ------ |
 | demo | demo123 |
 | spiderman | spiderman |
-| flash | flash |
-| deadpool | deadpool |
+| flash | flash123 |
+| deadpool | dead123 |
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
