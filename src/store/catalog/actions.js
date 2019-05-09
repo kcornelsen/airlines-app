@@ -20,12 +20,11 @@ import axios from "axios";
  * // exerpt from src/views/FlightResults.vue
  * async mounted() {
  * // @ts-ignore
- * if (this.isLoggedIn) {
  *    await this.$store.dispatch("catalog/fetchFlights", {
  *       date: this.date,
  *       departure: this.departure,
  *       arrival: this.arrival
- *    });
+ *    }
  *
  *    this.filteredFlights = this.sortByDeparture(this.flights);
  * }
@@ -34,7 +33,7 @@ export function fetchFlights({ commit }, { date, departure, arrival }) {
   return new Promise(async (resolve, reject) => {
     commit("SET_LOADER", true);
     try {
-   
+
       var departureDate = new Date()
       departureDate.setHours(6);
       var arrivalDate = new Date();
@@ -43,28 +42,28 @@ export function fetchFlights({ commit }, { date, departure, arrival }) {
 
       let flights = []
       var numberOfFlightsReturn = Math.floor(Math.random() * 6) + 1;
-      for(var i = 0; i < numberOfFlightsReturn; i++){
+      for (var i = 0; i < numberOfFlightsReturn; i++) {
 
-        departureDate.setHours(departureDate.getHours()+1);
-        arrivalDate.setHours(arrivalDate.getHours()+1);
-        arrivalDate.setMinutes(arrivalDate.getMinutes()+5);
+        departureDate.setHours(departureDate.getHours() + 1);
+        arrivalDate.setHours(arrivalDate.getHours() + 1);
+        arrivalDate.setMinutes(arrivalDate.getMinutes() + 5);
         let flight = new Flight({
-          arrivalAirportCode:arrival,
-          arrivalAirportName:"",
-          arrivalCity:"",
+          arrivalAirportCode: arrival,
+          arrivalAirportName: "",
+          arrivalCity: "",
           arrivalDate: arrivalDate.toString(),
-          arrivalLocale:"Europe/Madrid",
-          departureAirportCode:departure,
-          departureAirportName:"",
-          departureCity:"",
-          departureDate:departureDate.toString(),
-          departureLocale:"Europe/London",
-          flightNumber:1810+i,
-          id:i.toString(),
-          ticketCurrency:"USD",
-          ticketPrice:Math.floor(Math.random()*(500-100+1)+100) 
-          })
-          flights.push(flight)
+          arrivalLocale: "Europe/Madrid",
+          departureAirportCode: departure,
+          departureAirportName: "",
+          departureCity: "",
+          departureDate: departureDate.toString(),
+          departureLocale: "Europe/London",
+          flightNumber: 1810 + i,
+          id: i.toString(),
+          ticketCurrency: "USD",
+          ticketPrice: Math.floor(Math.random() * (500 - 100 + 1) + 100)
+        })
+        flights.push(flight)
       }
 
 
@@ -97,7 +96,7 @@ export function fetchFlights({ commit }, { date, departure, arrival }) {
  * @example
  * // exerpt from src/views/FlightSelection.vue
  * async beforeMount() {
- *    if (this.isLoggedIn) {
+ *    if (this.isAuthenticated) {
  *        if (!this.flight) {
  *            this.selectedFlight = await this.$store.dispatch("catalog/fetchByFlightNumber", {
  *              date: this.date,

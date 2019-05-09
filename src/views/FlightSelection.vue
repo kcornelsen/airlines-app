@@ -143,24 +143,28 @@ export default {
     }
   },
   /**
+   * @param {boolean} isAuthenticated - Getter from Profile module
    * @param {boolean} loading - Loader state used to control Flight Loader when fetching flights
    */
   computed: {
+    ...mapGetters("profile", ["isAuthenticated"]),
     ...mapState({
       loading: state => state.catalog.loading
     })
   },
   async beforeMount() {
-    if (!this.flight) {
-      this.selectedFlight = await this.$store.dispatch(
-        "catalog/fetchByFlightNumber",
-        {
-          date: this.date,
-          departure: this.departure,
-          arrival: this.arrival,
-          flightNumber: parseInt(this.flightNumber)
-        }
-      );
+    if (this.isAuthenticated) {
+      if (!this.flight) {
+        this.selectedFlight = await this.$store.dispatch(
+          "catalog/fetchByFlightNumber",
+          {
+            date: this.date,
+            departure: this.departure,
+            arrival: this.arrival,
+            flightNumber: parseInt(this.flightNumber)
+          }
+        );
+      }
     }
   },
   mounted() {

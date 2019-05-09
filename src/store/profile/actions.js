@@ -1,13 +1,19 @@
-export function login({ commit }, { user }) {
-    return new Promise((resolve) => {
-        commit("SET_USER", user);
-        resolve();
-    })
-}
+import { Auth } from "aws-amplify";
 
-export function logout({ commit }) {
+export function getSession({ commit, getters }) {
     return new Promise((resolve, reject) => {
-        localStorage.removeItem("SET_USER")
-        resolve();
-    })
-}
+      Auth.currentAuthenticatedUser()
+        .then(user => {
+          if (!getters.isAuthenticated) {
+            commit("SET_USER", user);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          if (getters.isAuthenticated) {
+            commit("SET_USER");
+          }
+          reject();
+        });
+    });
+  }

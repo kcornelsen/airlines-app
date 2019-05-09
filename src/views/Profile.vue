@@ -46,9 +46,7 @@
           </div>
         </div>
       </div>
-      <div class="wrapper">
-        <q-btn @click="signOut" class="cta__button" color="secondary" label="Sign Out"></q-btn>
-      </div>
+      <amplify-sign-out class="Form--signout"></amplify-sign-out>
     </div>
   </div>
 </template>
@@ -65,6 +63,7 @@ import { AmplifyEventBus } from "aws-amplify-vue";
 export default {
   name: "Profile",
   computed: {
+    ...mapGetters("profile", ["isAuthenticated"]),
     ...mapState({
       user: state => state.profile.user,
       loyalty: state => state.loyalty.loyalty
@@ -119,7 +118,22 @@ export default {
     }
   },
   async mounted() {
-    await this.$store.dispatch("loyalty/fetchLoyalty");
+    /** Amplify clears out cookies and any storage that can map to users
+     * However it is on us to clear out our own store and redirect to Auth
+     * If customer decides to sign out we redirect it to home, and subsequentially to authentication
+     */
+    AmplifyEventBus.$on("authState", info => {
+      if (info === "signedOut") {
+        this.$store
+          .dispatch("profile/getSession")
+          .catch(
+            this.$router.push({ name: "auth", query: { redirectTo: "home" } })
+          );
+      }
+    });
+    if (this.isAuthenticated) {
+      await this.$store.dispatch("loyalty/fetchLoyalty");
+    }
   }
 };
 </script>

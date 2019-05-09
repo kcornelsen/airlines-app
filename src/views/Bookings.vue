@@ -6,24 +6,12 @@
     <div class="bookings">
       <q-timeline color="secondary" class="q-pl-md">
         <div class="booking" v-for="booking in bookings" :key="booking.id">
-          <q-timeline-entry
-            class="booking__entry"
-            icon="flight_takeoff"
-            side="left"
-          >
+          <q-timeline-entry class="booking__entry" icon="flight_takeoff" side="left">
             <h5 slot="subtitle" class="q-timeline-subtitle">
-              <span>
-                {{ booking.departureCity }} &mdash; {{ booking.bookingDate }}
-              </span>
+              <span>{{ booking.departureCity }} &mdash; {{ booking.bookingDate }}</span>
             </h5>
-            <booking-flight
-              :bookingID="booking.id"
-              :flight="booking.outboundFlight"
-            />
-            <booking-flight
-              :bookingID="booking.id"
-              :flight="booking.inboundFlight"
-            />
+            <booking-flight :bookingID="booking.id" :flight="booking.outboundFlight"/>
+            <booking-flight :bookingID="booking.id" :flight="booking.inboundFlight"/>
           </q-timeline-entry>
         </div>
       </q-timeline>
@@ -46,30 +34,35 @@ export default {
     BookingFlight
   },
   async mounted() {
-
-    await this.$store.dispatch("bookings/fetchBooking");
-    
+    if (this.isAuthenticated) {
+      await this.$store.dispatch("bookings/fetchBooking");
+    }
   },
   /**
    * @param {Booking} bookings - Bookings state from Bookings module
+   * @param {boolean} isAuthenticated - Getter from Profile module
    */
   computed: {
     ...mapState({
       bookings: state => state.bookings.bookings
-    })
+    }),
+     ...mapGetters("profile", ["isAuthenticated"])
   }
 };
 </script>
 <style lang="stylus">
-@import '~variables'
+@import '~variables';
 
-.booking__heading
-  margin-top 2rem
+.booking__heading {
+  margin-top: 2rem;
+}
 
-.booking__flight
-  margin 0 !important
-  margin-right 1rem !important
+.booking__flight {
+  margin: 0 !important;
+  margin-right: 1rem !important;
+}
 
-.booking__entry
-  padding-left 2rem
+.booking__entry {
+  padding-left: 2rem;
+}
 </style>

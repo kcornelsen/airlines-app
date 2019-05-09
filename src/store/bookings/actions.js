@@ -17,7 +17,7 @@ import axios from "axios";
  * import { mapState, mapGetters } from "vuex";
  * ...
  * async mounted() {
- *    if (this.isLoggedIn) {
+ *    if (this.isAuthenticated) {
  *       await this.$store.dispatch("bookings/fetchBooking");
  *    }
  * },
@@ -25,7 +25,7 @@ import axios from "axios";
  *    ...mapState({
  *        bookings: state => state.bookings.bookings
  *    }),
- *    ...mapGetters("auth", ["isLoggedIn"])
+ *    ...mapGetters("profile", ["isAuthenticated"])
  * }
  */
 export function fetchBooking({ commit }) {

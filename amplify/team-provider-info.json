@@ -9,6 +9,11 @@
             "UnauthRoleName": "airline-test-20190506184220-unauthRole",
             "StackName": "airline-test-20190506184220",
             "StackId": "arn:aws:cloudformation:us-east-1:831333969064:stack/airline-test-20190506184220/a17ef300-6feb-11e9-8ccf-0aa7a65c926c"
+        },
+        "categories": {
+            "auth": {
+                "cognitoa84c12f8": {}
+            }
         }
     }
 }
