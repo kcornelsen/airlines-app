@@ -1,99 +1,92 @@
 <template>
   <q-page class="container">
-    <div class="wrapper">
-      <div class="heading">
-        <div class="q-display-1">Where next?</div>
+    <q-parallax src="fly.jpg" :height="300"></q-parallax>
+
+    <div class="row gutter-sm search__options--input">
+      <div class="radios col-xs-12">
+        <q-radio v-model="isRoundTrip" val="false" label="one-way"/>
+        <q-radio v-model="isRoundTrip" val="true" label="round-trip" style="margin-left: 10px"/>
+      </div>
+      <div class="search__departure col-xs-12 col-sm-6">
+        <q-field
+          class="home-icons search__departure"
+          icon="flight_takeoff"
+          icon-color="primary"
+          :label-width="8"
+        >
+          <q-input
+            class="search__departure"
+            v-model="departureCity"
+            stack-label="Departure airport"
+          >
+            <q-autocomplete
+              class="search__departure--suggestion text-bold"
+              :min-characters="3"
+              :static-data="{ field: 'city', list: suggestionList }"
+              :filter="fuzzySearchFilter"
+              value-field="sublabel"
+            />
+          </q-input>
+        </q-field>
+      </div>
+      <div class="search__arrival col-xs-12 col-sm-6">
+        <q-field
+          class="home-icons search__arrival"
+          icon="flight_land"
+          icon-color="primary"
+          :label-width="8"
+        >
+          <q-input class="search__arrival" v-model="arrivalCity" stack-label="Arrival airport">
+            <q-autocomplete
+              class="search__arrival--suggestion text-bold"
+              :min-characters="3"
+              :static-data="{ field: 'city', list: suggestionList }"
+              :filter="fuzzySearchFilter"
+              value-field="sublabel"
+            />
+          </q-input>
+        </q-field>
+      </div>
+      <div class="depart__date col-xs-12 col-sm-6">
+        <q-field icon="calendar_today" icon-color="primary" class="depart__date">
+          <q-datetime
+            v-model="departureDate"
+            type="date"
+            format="ddd, DD MMM YYYY"
+            stack-label="Departure date"
+            :min="new Date()"
+          />
+        </q-field>
+      </div>
+      <div class="return__date col-xs-12 col-sm-6">
+        <q-field
+          v-if="isRoundTrip === 'true'"
+          icon="calendar_today"
+          icon-color="primary"
+          class="return__date"
+        >
+          <q-datetime
+            v-model="returnDate"
+            type="date"
+            format="ddd, DD MMM YYYY"
+            stack-label="Return date"
+            :min="new Date()"
+          />
+        </q-field>
+      </div>
+      <div class="travelers col-xs-6 col-sm-6">
+        <q-field class="home-icons travelers" icon="group" icon-color="primary">
+          <q-input
+            v-model="numberOfPassengers"
+            type="number"
+            min="1"
+            max="10"
+            stack-label="Number of travelers"
+          ></q-input>
+        </q-field>
       </div>
     </div>
 
-    <div class="search__options q-pa-sm">
-      
-      <div class="row search__options--input">
-        <q-field
-        class="col search__options--input booking__option"
-      >
-        <q-select
-          inverted
-          v-model="bookingOption"
-          radio
-          :options="bookingOptions"
-        />
-        </q-field>
-        <q-field
-        class="col search__options--input passangers"
-      >
-        <q-input
-          v-model.number="numberOfPassengers"
-          max="10"
-          min="1"
-          type="number"
-          inverted
-          align = "center"
-          prefix="passangers  : "
-        />
-        </q-field>
-      </div>
-
-      <q-field
-        class="home-icons search__options--input search__departure"
-        icon="flight_takeoff"
-        icon-color="primary"
-        :label-width="8"
-      >
-        <q-input class="search__departure" v-model="departureCity" stack-label="Departure airport">
-          <q-autocomplete
-            class="search__departure--suggestion text-bold"
-            :min-characters="3"
-            :static-data="{ field: 'city', list: suggestionList }"
-            :filter="fuzzySearchFilter"
-            value-field="sublabel"
-          />
-        </q-input>
-      </q-field>
-      <q-field
-        class="home-icons search__options--input search__arrival"
-        icon="flight_land"
-        icon-color="primary"
-        :label-width="8"
-      >
-        <q-input class="search__arrival" v-model="arrivalCity" stack-label="Arrival airport">
-          <q-autocomplete
-            class="search__arrival--suggestion text-bold"
-            :min-characters="3"
-            :static-data="{ field: 'city', list: suggestionList }"
-            :filter="fuzzySearchFilter"
-            value-field="sublabel"
-          />
-        </q-input>
-      </q-field>
-      <q-field
-        icon="calendar_today"
-        icon-color="primary"
-        class="depart__date search__options--input"
-      >
-        <q-datetime
-          v-model="departureDate"
-          type="date"
-          format="ddd, DD MMM YYYY"
-          stack-label="Departure date"
-          :min="new Date()"
-        />
-      </q-field>
-      <q-field
-        v-if="bookingOption === 'round-trip'"
-        icon="calendar_today"
-        icon-color="primary"
-        class="return__date search__options--input"
-      >
-        <q-datetime
-          v-model="returnDate"
-          type="date"
-          format="ddd, DD MMM YYYY"
-          stack-label="Return date"
-          :min="new Date()"
-        />
-      </q-field>
-    </div>
     <div class="wrapper">
       <q-btn
         @click="search"
@@ -179,17 +172,7 @@ export default {
       returnDate: new Date(),
       suggestionList: parseAirports(),
       numberOfPassengers: 1,
-      bookingOption: "one-way",
-      bookingOptions: [
-        {
-          label: "one-way",
-          value: "one-way"
-        },
-        {
-          label: "round-trip",
-          value: "round-trip"
-        }
-      ]
+      isRoundTrip: "false"
     };
   },
   methods: {
@@ -202,7 +185,8 @@ export default {
         query: {
           date: date.formatDate(this.departureDate, "YYYY-MM-DD"),
           departure: this.departureCity,
-          arrival: this.arrivalCity
+          arrival: this.arrivalCity,
+          returnDate: date.formatDate(this.departureDate, "YYYY-MM-DD")
         }
       });
     },
@@ -233,7 +217,7 @@ export default {
 
 .search__options--input {
   padding: 0.3rem 1.5rem;
-  max-width: 30rem;
+  max-width: 60rem;
   margin: auto;
 }
 </style>

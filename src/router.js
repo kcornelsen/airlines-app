@@ -46,7 +46,7 @@ const router = new Router({
                 {
                     path: "",
                     name: "home",
-                    component: SignIn
+                    component: SearchFlights
                 }
             ]
         }
