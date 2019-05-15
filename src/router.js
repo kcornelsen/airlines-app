@@ -3,6 +3,7 @@ import Router from "vue-router";
 import DefaultLayout from "./layouts/Default.vue";
 import SearchFlights from "./views/Search.vue";
 import Profile from "./views/Profile.vue";
+import ReturnFlightResults from "./views/ReturnFlightResults.vue";
 import FlightResults from "./views/FlightResults.vue";
 import FlightSelection from "./views/FlightSelection.vue";
 import Bookings from "./views/Bookings.vue";
@@ -21,6 +22,12 @@ const router = new Router({
                     name: "searchResults",
                     path: "/search/results",
                     component: FlightResults,
+                    props: route => ({ ...route.params, ...route.query })
+                },
+                {
+                    name: "returnResults",
+                    path: "/search/return-results",
+                    component: ReturnFlightResults,
                     props: route => ({ ...route.params, ...route.query })
                 },
                 {

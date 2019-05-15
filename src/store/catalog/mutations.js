@@ -11,6 +11,10 @@ export const SET_FLIGHTS = async (state, flights) => {
   state.flights = flights;
 };
 
+export const SET_RETURN_FLIGHTS = async (state, flights) => {
+  state.returnedFlights = flights;
+};
+
 /**
  *
  * Catalog [Vuex Module Mutation](https://vuex.vuejs.org/guide/mutations.html) - SET_LOADER mutates Catalog state to control content loader when necessary.

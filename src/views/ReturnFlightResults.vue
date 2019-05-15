@@ -1,23 +1,10 @@
 <template>
   <q-page class="container">
-    <flight-toolbar
-      v-if="date && departure && arrival"
-      :departure="departure"
-      :arrival="arrival"
-    />
-    <q-page-sticky
-      v-if="date && departure && arrival"
-      position="top-right"
-      :offset="[15, 13]"
-    >
+    <flight-toolbar v-if="date && departure && arrival" :departure="departure" :arrival="arrival"/>
+    <q-page-sticky v-if="date && departure && arrival" position="top-right" :offset="[15, 13]">
       <q-fab flat icon="tune" direction="left">
         <q-fab-action color="secondary" icon="attach_money" glossy>
-          <q-popup-edit
-            @save="setPrice"
-            title="Max Price filter"
-            buttons
-            v-model="maxPriceFilter"
-          >
+          <q-popup-edit @save="setPrice" title="Max Price filter" buttons v-model="maxPriceFilter">
             <q-slider
               color="secondary"
               :min="minimumPrice"
@@ -52,12 +39,7 @@
             />
           </q-popup-edit>
         </q-fab-action>
-        <q-fab-action
-          color="secondary"
-          icon="cancel"
-          @click="filteredFlights = flights"
-          glossy
-        />
+        <q-fab-action color="secondary" icon="cancel" @click="filteredFlights = returnflights" glossy/>
       </q-fab>
     </q-page-sticky>
     <div class="heading">
@@ -66,12 +48,9 @@
           <flight-loader></flight-loader>
         </div>
         <div v-if="filteredFlights.length && !loading">
-          <span>Select your flight</span>
+          <span>Select your return flight</span>
         </div>
-        <div
-          v-if="!filteredFlights.length && !loading"
-          class="heading__error row"
-        >
+        <div v-if="!filteredFlights.length && !loading" class="heading__error row">
           <span class="justify-center full-width">No results found</span>
           <transition enter-active-class="animated bounce" appear>
             <q-btn
@@ -80,36 +59,22 @@
               label="Search flights"
               icon="keyboard_arrow_left"
               :to="{ name: 'home' }"
-            >
-            </q-btn>
+            ></q-btn>
           </transition>
         </div>
       </div>
     </div>
-    <div class="flight__results" v-if="isRoundTrip=='false' && filteredFlights.length && !loading ">
+    <div class="flight__results" v-if="filteredFlights.length && !loading">
       <router-link
         :to="{
           name: 'selectedFlight',
-          params: { flight: flight },
-          query: { flightNumber: flight.flightNumber, date: date, departure: departure, arrival: arrival }
+          params: { flight: flight, returnFlight: returnFlight},
+          query: { flightNumber: flight.flightNumber, returnFlightNumber: returnFlight.flightNumber, date, returnDate, departure, arrival }
         }"
-        v-for="flight in filteredFlights"
-        :key="flight.id"
+        v-for="returnFlight in filteredFlights"
+        :key="returnFlight.id"
       >
-        <flight-card :details="flight" />
-      </router-link>
-    </div>
-    <div class="flight__results__rt" v-if="isRoundTrip=='true' && filteredFlights.length && !loading">
-      <router-link
-        :to="{
-          name: 'returnResults',
-          params: { flight: flight },
-          query: { flightNumber: flight.flightNumber, date: date, returnDate: returnDate, departure, arrival }
-        }"
-        v-for="flight in filteredFlights"
-        :key="flight.id"
-      >
-        <flight-card :details="flight" />
+        <flight-card :details="returnFlight"/>
       </router-link>
     </div>
   </q-page>
@@ -117,6 +82,7 @@
 
 <script>
 // @ts-nocheck
+import FlightClass from "../shared/models/FlightClass";
 import FlightCard from "../components/FlightCard";
 import FlightToolbar from "../components/FlightToolbar";
 import FlightLoader from "../components/FlightLoader";
@@ -128,7 +94,7 @@ import { priceSorter, scheduleSorter } from "../shared/mixins/sorters";
  * Flight Results view displays a collection of Flights from Catalog.
  */
 export default {
-  name: "FlightResults",
+  name: "ReturnFlightResults",
   components: {
     FlightCard,
     FlightToolbar,
@@ -136,20 +102,21 @@ export default {
   },
   mixins: [priceFilter, scheduleFilter, priceSorter, scheduleSorter],
   /**
-   * @param {string} date - Departure date one wishes to travel by
+   * @param {string} inboundDate - Departure date one wishes to travel by
    * @param {string} departure - Departure airport IATA one wishes to travel from
    * @param {string} arrival - Arrival airport IATA one wishes to travel to
    */
   props: {
+    flight: { type: FlightClass },
+    flightNumber: { type: [Number, String], required: true }, // depending on browser flightNumber may come as string
     date: { type: String, required: true },
+    returnDate: { type: String, required: true },
     departure: { type: String, required: true },
-    arrival: { type: String, required: true },
-    returnDate: { type: String, required: false }, 
-    isRoundTrip: {type: String, required: true }
+    arrival: { type: String, required: true }
   },
   /**
    * @param {Flight[]} filteredFlights - List of Flights filtered by departure, price or schedule
-   * @param {string} departureTimeFilter - Departure schedule one wishes to filter flights by
+   * @param {string} departureToptimeFilter - Departure schedule one wishes to filter flights by
    * @param {string} arrivalTimeFilter - Arrival schedule one wishes to filter flights by
    * @param {string} maxPriceFilter - Maximum price one wishes to limit flights to
    */
@@ -162,21 +129,20 @@ export default {
     };
   },
   async mounted() {
+    await this.$store.dispatch("catalog/fetchReturnFlights", {
+      date: this.returnDate,
+      departure: this.arrival,
+      arrival: this.departure
+    });
 
-      await this.$store.dispatch("catalog/fetchFlights", {
-        date: this.date,
-        departure: this.departure,
-        arrival: this.arrival
-      });
-
-      this.filteredFlights = this.sortByDeparture(this.flights);
+    this.filteredFlights = this.returnFlights;
   },
   methods: {
     /**
      * setPrice method updates maxPriceFilter and filter flights via filterByMaxPrice mixin
      */
     setPrice() {
-      let flights = this.filterByMaxPrice(this.flights, this.maxPriceFilter);
+      let flights = this.filterByMaxPrice(this.returnFlights, this.maxPriceFilter);
       flights = this.sortByPrice(flights);
       this.filteredFlights = flights;
     },
@@ -184,8 +150,8 @@ export default {
      * setDeparture method updates departureTimeFilter and filter flights via filterBySchedule mixin
      */
     setDeparture() {
-      let flights = this.filterBySchedule(this.flights, {
-        departure: this.departureTimeFilter
+      let flights = this.filterBySchedule(this.returnFlights, {
+        arrival: this.departureTimeFilter
       });
       flights = this.sortByDeparture(flights);
       this.filteredFlights = flights;
@@ -194,8 +160,8 @@ export default {
      * setArrival method updates arrivalTimeFilter and filter flights via filterBySchedule mixin
      */
     setArrival() {
-      this.filteredFlights = this.filterBySchedule(this.flights, {
-        arrival: this.arrivalTimeFilter
+      this.filteredFlights = this.filterBySchedule(this.returnFlights, {
+        departure: this.arrivalTimeFilter
       });
     }
   },
@@ -207,30 +173,33 @@ export default {
    */
   computed: {
     ...mapState({
-      flights: state => state.catalog.flights,
+      returnFlights: state => state.catalog.returnFlights,
       loading: state => state.catalog.loading
     }),
     maximumPrice: function() {
-      return Math.max(...this.flights.map(filter => filter.ticketPrice), 500);
+      return Math.max(...this.returnFlights.map(filter => filter.ticketPrice), 500);
     },
     minimumPrice: function() {
-      return Math.min(...this.flights.map(filter => filter.ticketPrice), 1);
+      return Math.min(...this.returnFlights.map(filter => filter.ticketPrice), 1);
     }
   }
 };
 </script>
 
 <style lang="stylus" scoped>
-@import '~variables'
+@import '~variables';
 
-.heading
-  margin-top 5.5rem
+.heading {
+  margin-top: 5.5rem;
+}
 
-.heading__error--cta
-  margin auto
-  margin-top 10vh
-  width 70vw
+.heading__error--cta {
+  margin: auto;
+  margin-top: 10vh;
+  width: 70vw;
+}
 
-.loader
-  width 150%
+.loader {
+  width: 150%;
+}
 </style>

@@ -13,6 +13,7 @@
         </div>
       </div>
       <flight-card v-if="this.selectedFlight" :details="this.selectedFlight"/>
+      <flight-card v-if="this.selectedReturnFlight" :details="this.returnFlight"/>
     </div>
     <div class="form__payment">
       <div class="text-center">
@@ -117,8 +118,11 @@ export default {
    */
   props: {
     flight: { type: FlightClass },
+    returnFlight: { type: FlightClass },
     flightNumber: { type: [Number, String], required: true }, // depending on browser flightNumber may come as string
+    returnFlightNumber: { type: [Number, String], required: false }, // depending on browser flightNumber may come as string
     date: { type: String, required: true },
+    returnDate: { type: String, required: false },
     departure: { type: String, required: true },
     arrival: { type: String, required: true }
   },
@@ -165,6 +169,18 @@ export default {
           }
         );
       }
+      if (!this.returnFlight) {
+        
+        this.selectedReturnFlight = await this.$store.dispatch(
+          "catalog/fetchByReturnFlightNumber",
+          {
+            date: this.returnDate,
+            departure: this.arrival,
+            arrival: this.departure,
+            flightNumber: parseInt(this.returnFlightNumber)
+          }
+        );
+      }
     }
   },
   mounted() {
@@ -189,6 +205,8 @@ export default {
    * @param {object} form.countryOptions - List of countries we accept payment from
    * @param {boolean} isCardInvalid - Boolean updated through Stripe Elements events upon input
    * @param {Flight} selectedFlight - Selected Flight
+   * @param {Flight} selectedReturnFlight - Selected Flight
+
    */
   data() {
     return {
@@ -217,7 +235,8 @@ export default {
         ],
         isCardInvalid: true
       },
-      selectedFlight: this.flight
+      selectedFlight: this.flight,
+      selectedReturnFlight: this.returnFlight
     };
   },
   methods: {

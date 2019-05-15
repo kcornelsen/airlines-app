@@ -186,7 +186,8 @@ export default {
           date: date.formatDate(this.departureDate, "YYYY-MM-DD"),
           departure: this.departureCity,
           arrival: this.arrivalCity,
-          returnDate: date.formatDate(this.departureDate, "YYYY-MM-DD")
+          returnDate: date.formatDate(this.returnDate, "YYYY-MM-DD"), 
+          isRoundTrip: this.isRoundTrip
         }
       });
     },

@@ -7,5 +7,6 @@
  */
 export default {
   flights: [],
+  returnFlights: [],
   loading: false
 };
