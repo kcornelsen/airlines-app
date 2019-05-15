@@ -6,7 +6,12 @@
           <q-icon name="menu"/>
         </q-btn>
         <q-toolbar-title class="brand text-bold">Flight App</q-toolbar-title>
-        <q-btn flat size="md" icon="account_circle" label= "Sign In" :to="{ name: 'profile' }"/>
+        <div v-if="user">
+          <label>Hi {{ user.username }} </label>
+        </div>
+        <div v-else>
+          <q-btn flat size="md" icon="account_circle" label="Sign In" :to="{ name: 'profile' }"/>
+        </div>
       </q-toolbar>
     </q-layout-header>
 
@@ -39,12 +44,18 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       leftDrawer: true,
       leftDrawerOpen: this.$q.platform.is.desktop
     };
+  },
+  computed: {
+    ...mapState({
+      user: state => state.profile.user
+    })
   }
 };
 </script>
