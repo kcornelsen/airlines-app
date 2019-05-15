@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12 wrapper">
       <div class="heading">
-        <div class="text-primary q-display-1 loyalty__heading--name">Bruce Wayne</div>
+        <div class="text-primary q-display-1 loyalty__heading--name">{{ this.name }} </div>
         <div class="loyalty__heading--tier">
           <div class="q-title loyalty__heading-tier-name">{{ loyalty.level }}</div>
           <div
@@ -63,7 +63,7 @@ import { AmplifyEventBus } from "aws-amplify-vue";
 export default {
   name: "Profile",
   computed: {
-    ...mapGetters("profile", ["isAuthenticated"]),
+    ...mapGetters("profile", ["isAuthenticated", "name"]),
     ...mapState({
       user: state => state.profile.user,
       loyalty: state => state.loyalty.loyalty
@@ -134,6 +134,7 @@ export default {
     if (this.isAuthenticated) {
       await this.$store.dispatch("loyalty/fetchLoyalty");
     }
+
   }
 };
 </script>
