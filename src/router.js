@@ -19,6 +19,12 @@ const router = new Router({
             component: DefaultLayout,
             children: [
                 {
+                    path: "",
+                    name: "home",
+                    component: SearchFlights,
+                    alias: "/search",
+                },
+                {
                     name: "searchResults",
                     path: "/search/results",
                     component: FlightResults,
@@ -34,8 +40,7 @@ const router = new Router({
                     name: "selectedFlight",
                     path: "/search/results/review",
                     component: FlightSelection,
-                    props: route => ({ ...route.params, ...route.query }), // converts query strings and params to props
-                    meta: { requiresAuth: true }
+                    props: route => ({ ...route.params, ...route.query }) // converts query strings and params to props
                 },
                 {
                     path: "/profile",
@@ -50,14 +55,10 @@ const router = new Router({
                     meta: { requiresAuth: true }
                 },
                 {
-                    path: "",
-                    name: "home",
-                    component: SearchFlights
-                },
-                {
                     path: "/auth",
                     name: "auth",
-                    component: Auth
+                    component: Auth,
+                    props: route => ({ ...route.params, ...route.query })
                 }
 
             ]
