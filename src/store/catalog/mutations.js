@@ -12,7 +12,7 @@ export const SET_FLIGHTS = async (state, flights) => {
 };
 
 export const SET_RETURN_FLIGHTS = async (state, flights) => {
-  state.returnedFlights = flights;
+  state.returnFlights = flights;
 };
 
 /**
