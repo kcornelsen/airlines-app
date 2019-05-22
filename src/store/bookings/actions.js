@@ -24,8 +24,8 @@ export function fetchBooking({ commit }) {
       } = await API.graphql(graphqlOperation(queries.listBookings));
       const bookings = bookingData.map(booking => new Booking(booking));
       bookings.map(booking => {
-        if (booking.inboundFlight){
-          booking.inboundFlight = new Flight(booking.inboundFlight);  
+        if (booking.inboundFlight) {
+          booking.inboundFlight = new Flight(booking.inboundFlight);
         };
         booking.outboundFlight = new Flight(booking.outboundFlight);
         return booking;
@@ -55,7 +55,7 @@ export function fetchBooking({ commit }) {
  */
 export function createBooking(
   { commit },
-  { paymentToken, outboundFlight, inboundFlight }
+  { paymentToken, outboundFlight, inboundFlight = null }
 ) {
   const processPayment = () => {
     Loading.show({
@@ -109,33 +109,23 @@ export function createBooking(
       let {
         data: { createBooking: bookingData }
       } = await processBooking();
-      console.log(bookingData)
-      console.log(bookingData.outboundFlight)
+
       await API.graphql(graphqlOperation(mutations.createFlight, { input: bookingData.outboundFlight }));
 
-      let booking = null;
-
+      let bookingInboundFlightId = null;
       if (bookingData.inboundFlight) {
         await API.graphql(graphqlOperation(mutations.createFlight, { input: bookingData.inboundFlight }));
-        let input = {
-          id: bookingData.id,
-          departureCity: bookingData.departureCity,
-          transactionDate: bookingData.transactionDate,
-          bookingInboundFlightId: bookingData.inboundFlight.id,
-          bookingOutboundFlightId: bookingData.outboundFlight.id
-        };
-        booking = await API.graphql(graphqlOperation(mutations.createBooking, { input: input }));
+        bookingInboundFlightId = bookingData.inboundFlight.id;
       }
-      else {
-        let input = {
-          id: bookingData.id,
-          departureCity: bookingData.departureCity,
-          transactionDate: bookingData.transactionDate,
-          bookingInboundFlightId: null,
-          bookingOutboundFlightId: bookingData.outboundFlight.id
-        };
-        booking = await API.graphql(graphqlOperation(mutations.createBooking, { input: input }));
-      };
+      const input = {
+        id: bookingData.id,
+        departureCity: bookingData.departureCity,
+        transactionDate: bookingData.transactionDate,
+        bookingInboundFlightId: bookingInboundFlightId,
+        bookingOutboundFlightId: bookingData.outboundFlight.id
+      }
+      const booking = await API.graphql(graphqlOperation(mutations.createBooking, { input: input }));
+
       resolve(booking);
     } catch (err) {
       reject(err);
