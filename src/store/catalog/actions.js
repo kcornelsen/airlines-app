@@ -1,5 +1,6 @@
 import Flight from "../../shared/models/FlightClass";
 import axios from "axios";
+import uuid from 'uuid';
 
 /**
  *
@@ -16,18 +17,6 @@ import axios from "axios";
  * @returns {promise} - Promise representing whether flights from Catalog have been updated in the store
  * @see {@link SET_FLIGHTS} for more info on mutation
  * @see {@link SET_LOADER} for more info on mutation
- * @example
- * // exerpt from src/views/FlightResults.vue
- * async mounted() {
- * // @ts-ignore
- *    await this.$store.dispatch("catalog/fetchFlights", {
- *       date: this.date,
- *       departure: this.departure,
- *       arrival: this.arrival
- *    }
- *
- *    this.filteredFlights = this.sortByDeparture(this.flights);
- * }
  */
 
 export function fetchFlights({ commit }, { date, departure, arrival }) {
@@ -68,6 +57,7 @@ function generateFlights(date, departureAirport, arrivalAirport) {
   let arrivalDate = new Date(date)
   arrivalDate.setHours(10);
   arrivalDate.setMinutes(15);
+  const uuidv4 = require('uuid/v4');
 
   let flights = []
   var numberOfFlightsReturn = Math.floor(Math.random() * 4) + 1;
@@ -78,17 +68,17 @@ function generateFlights(date, departureAirport, arrivalAirport) {
     arrivalDate.setMinutes(arrivalDate.getMinutes() + 5);
     let flight = new Flight({
       arrivalAirportCode: arrivalAirport,
-      arrivalAirportName: "",
-      arrivalCity: "",
+      arrivalAirportName: arrivalAirport,
+      arrivalCity: arrivalAirport,
       arrivalDate: arrivalDate.toString(),
       arrivalLocale: "Europe/Madrid",
       departureAirportCode: departureAirport,
-      departureAirportName: "",
-      departureCity: "",
+      departureAirportName: departureAirport,
+      departureCity: departureAirport,
       departureDate: departureDate.toString(),
       departureLocale: "Europe/London",
       flightNumber: 1810 + i,
-      id: i.toString(),
+      id: uuidv4(),
       ticketCurrency: "USD",
       ticketPrice: Math.floor(Math.random() * (300 - 80 + 1) + 80)
     })
@@ -112,20 +102,6 @@ function generateFlights(date, departureAirport, arrivalAirport) {
  * @param {number} obj.flightNumber - Flight Number
  * @returns {promise} - Promise representing flight from Catalog service.
  * @see {@link SET_LOADER} for more info on mutation
- * @example
- * // exerpt from src/views/FlightSelection.vue
- * async beforeMount() {
- *    if (this.isAuthenticated) {
- *        if (!this.flight) {
- *            this.selectedFlight = await this.$store.dispatch("catalog/fetchByFlightNumber", {
- *              date: this.date,
- *              departure: this.departure,
- *              arrival: this.arrival,
- *              flightNumber: parseInt(this.flightNumber)
- *            });
- *        }
- *    }
- * },
  */
 export function fetchByFlightNumber(
   { commit },

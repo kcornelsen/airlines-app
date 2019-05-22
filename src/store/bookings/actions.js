@@ -1,33 +1,13 @@
 import Booking from "../../shared/models/BookingClass";
 import Flight from "../../shared/models/FlightClass";
+import { API, graphqlOperation } from "aws-amplify";
+import * as queries from '../../graphql/queries';
+import * as mutations from '../../graphql/mutations';
+
 // @ts-ignore
 import { Loading } from "quasar";
 import axios from "axios";
 
-/**
- *
- * Booking [Vuex Module Action](https://vuex.vuejs.org/guide/actions.html) - fetchBooking retrieves all bookings for current authenticated customer.
- *
- * It uses SET_BOOKINGS mutation to update Booking state with the latest bookings and flights associated with them.
- * @param {object} context - Vuex action context (context.commit, context.getters, context.state, context.dispatch)
- * @returns {promise} - Promise representing whether bookings from Booking service have been updated in the store
- * @see {@link SET_BOOKINGS} for more info on mutation
- * @example
- * // exerpt from src/views/Bookings.vue
- * import { mapState, mapGetters } from "vuex";
- * ...
- * async mounted() {
- *    if (this.isAuthenticated) {
- *       await this.$store.dispatch("bookings/fetchBooking");
- *    }
- * },
- * computed: {
- *    ...mapState({
- *        bookings: state => state.bookings.bookings
- *    }),
- *    ...mapGetters("profile", ["isAuthenticated"])
- * }
- */
 export function fetchBooking({ commit }) {
   return new Promise(async (resolve, reject) => {
     Loading.show({
@@ -35,17 +15,23 @@ export function fetchBooking({ commit }) {
     });
 
     try {
-      const { data: bookingData } = await axios.get("/mocks/bookings.json");
+
+      const {
+        // @ts-ignore
+        data: {
+          listBookings: { items: bookingData }
+        }
+      } = await API.graphql(graphqlOperation(queries.listBookings));
       const bookings = bookingData.map(booking => new Booking(booking));
       bookings.map(booking => {
-        booking.inboundFlight = new Flight(booking.inboundFlight);
+        if (booking.inboundFlight){
+          booking.inboundFlight = new Flight(booking.inboundFlight);  
+        };
         booking.outboundFlight = new Flight(booking.outboundFlight);
-
         return booking;
       });
 
       commit("SET_BOOKINGS", bookings);
-
       resolve();
       Loading.hide();
     } catch (err) {
@@ -64,31 +50,8 @@ export function fetchBooking({ commit }) {
  * @param {object} obj - Object containing params required to create a booking
  * @param {object} obj.paymentToken - Stripe JS Payment token object
  * @param {Flight} obj.outboundFlight - Outbound Flight
- * @param {Flight} [obj.inboundFlight] - Inbound Flight
+ * @param {Flight} obj.inboundFlight - Inbound Flight
  * @returns {promise} - Promise representing booking effectively made in the Booking service.
- * @example
- * // exerpt from src/views/FlightSelection.vue
- * methods: {
- *    async payment() {
- *        let options = {
- *           name: this.form.name,
- *           address_zip: this.form.postcode,
- *           address_country: this.form.country
- *        }
- *
- *        try {
- *            const { token, error } = await stripe.createToken(card, options);
- *            this.token.details = token;
- *            this.token.error = error;
- *
- *            if (this.token.error) throw this.token.error;
- *
- *            await this.$store.dispatch("bookings/createBooking", {
- *              paymentToken: this.token,
- *              outboundFlight: this.flight
- *            });
- *        ...
- *        }
  */
 export function createBooking(
   { commit },
@@ -126,11 +89,11 @@ export function createBooking(
         let response = {
           data: {
             createBooking: {
-              id: "FK1ZL18",
-              departureCity: "London",
+              id: makeId(),
+              departureCity: outboundFlight.arrivalAirportCode,
               transactionDate: new Date().toISOString(),
-              inboundFlight: inboundFlight,
-              outboundFlight: outboundFlight
+              outboundFlight: outboundFlight,
+              inboundFlight: inboundFlight
             }
           }
         };
@@ -146,10 +109,46 @@ export function createBooking(
       let {
         data: { createBooking: bookingData }
       } = await processBooking();
-      let booking = new Booking(bookingData);
+      console.log(bookingData)
+      console.log(bookingData.outboundFlight)
+      await API.graphql(graphqlOperation(mutations.createFlight, { input: bookingData.outboundFlight }));
+
+      let booking = null;
+
+      if (bookingData.inboundFlight) {
+        await API.graphql(graphqlOperation(mutations.createFlight, { input: bookingData.inboundFlight }));
+        let input = {
+          id: bookingData.id,
+          departureCity: bookingData.departureCity,
+          transactionDate: bookingData.transactionDate,
+          bookingInboundFlightId: bookingData.inboundFlight.id,
+          bookingOutboundFlightId: bookingData.outboundFlight.id
+        };
+        booking = await API.graphql(graphqlOperation(mutations.createBooking, { input: input }));
+      }
+      else {
+        let input = {
+          id: bookingData.id,
+          departureCity: bookingData.departureCity,
+          transactionDate: bookingData.transactionDate,
+          bookingInboundFlightId: null,
+          bookingOutboundFlightId: bookingData.outboundFlight.id
+        };
+        booking = await API.graphql(graphqlOperation(mutations.createBooking, { input: input }));
+      };
       resolve(booking);
     } catch (err) {
       reject(err);
     }
   });
+}
+
+function makeId() {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < 6; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }

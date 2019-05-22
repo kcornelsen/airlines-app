@@ -156,33 +156,6 @@ export default {
       loading: state => state.catalog.loading
     })
   },
-  async beforeMount() {
-    if (this.isAuthenticated) {
-      if (!this.flight) {
-        this.selectedFlight = await this.$store.dispatch(
-          "catalog/fetchByFlightNumber",
-          {
-            date: this.date,
-            departure: this.departure,
-            arrival: this.arrival,
-            flightNumber: parseInt(this.flightNumber)
-          }
-        );
-      }
-      if (!this.returnFlight) {
-        
-        this.selectedReturnFlight = await this.$store.dispatch(
-          "catalog/fetchByReturnFlightNumber",
-          {
-            date: this.returnDate,
-            departure: this.arrival,
-            arrival: this.departure,
-            flightNumber: parseInt(this.returnFlightNumber)
-          }
-        );
-      }
-    }
-  },
   mounted() {
     /**
      * Stripe JS is loaded into the DOM asynchronously
@@ -217,7 +190,7 @@ export default {
       stripeKey: "pk_test_BpxANYCOZO7waMV3TrPQHjXa", // test key,
       form: {
         name: "",
-        country: "",
+        country: "US",
         postcode: "",
         countryOptions: [
           {
@@ -261,7 +234,7 @@ export default {
 
         await this.$store.dispatch("bookings/createBooking", {
           paymentToken: this.token,
-          outboundFlight: this.flight, 
+          outboundFlight: this.flight,
           inboundFlight: this.returnFlight
         });
 
