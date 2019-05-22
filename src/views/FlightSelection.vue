@@ -12,8 +12,12 @@
           <flight-loader></flight-loader>
         </div>
       </div>
-      <flight-card v-if="this.selectedFlight" :details="this.selectedFlight"/>
-      <flight-card v-if="this.selectedReturnFlight" :details="this.returnFlight"/>
+      <trip-card
+      :outboundFlight="this.selectedFlight"
+      :inboundFlight="this.selectedReturnFlight"
+      :numberOfTravelers="this.numberOfTravelers"
+      :tripTotal="this.tripTotal"
+      />
     </div>
     <div class="form__payment">
       <div class="text-center">
@@ -95,7 +99,7 @@
 
 <script>
 // @ts-nocheck
-import FlightCard from "../components/FlightCard";
+import TripCard from "../components/TripCard";
 import FlightToolbar from "../components/FlightToolbar";
 import FlightClass from "../shared/models/FlightClass";
 import FlightLoader from "../components/FlightLoader";
@@ -124,10 +128,11 @@ export default {
     date: { type: String, required: true },
     returnDate: { type: String, required: false },
     departure: { type: String, required: true },
-    arrival: { type: String, required: true }
+    arrival: { type: String, required: true },
+    numberOfTravelers: {type: Number , required: true}
   },
   components: {
-    FlightCard,
+    TripCard,
     FlightToolbar,
     FlightLoader
   },
@@ -150,6 +155,9 @@ export default {
    * @param {boolean} isAuthenticated - Getter from Profile module
    * @param {boolean} loading - Loader state used to control Flight Loader when fetching flights
    */
+  mounted() {
+    this.tripTotal = this.flight.ticketPrice * this.numberOfTravelers
+  },
   computed: {
     ...mapGetters("profile", ["isAuthenticated"]),
     ...mapState({
@@ -209,7 +217,8 @@ export default {
         isCardInvalid: true
       },
       selectedFlight: this.flight,
-      selectedReturnFlight: this.returnFlight
+      selectedReturnFlight: this.returnFlight,
+      tripTotal: this.flight.ticketPrice * this.numberOfTravelers
     };
   },
   methods: {

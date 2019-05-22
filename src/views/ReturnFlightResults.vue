@@ -69,7 +69,7 @@
         :to="{
           name: 'selectedFlight',
           params: { flight: flight, returnFlight: returnFlight},
-          query: { flightNumber: flight.flightNumber, returnFlightNumber: returnFlight.flightNumber, date, returnDate, departure, arrival }
+          query: { flightNumber: flight.flightNumber, returnFlightNumber: returnFlight.flightNumber, date, returnDate, departure, arrival, numberOfTravelers: numberOfTravelers}
         }"
         v-for="returnFlight in filteredFlights"
         :key="returnFlight.id"
@@ -112,7 +112,8 @@ export default {
     date: { type: String, required: true },
     returnDate: { type: String, required: true },
     departure: { type: String, required: true },
-    arrival: { type: String, required: true }
+    arrival: { type: String, required: true },
+    numberOfTravelers : {type: Number, required: true}
   },
   /**
    * @param {Flight[]} filteredFlights - List of Flights filtered by departure, price or schedule

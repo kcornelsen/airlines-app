@@ -77,7 +77,7 @@
       <div class="travelers col-xs-6 col-sm-6">
         <q-field class="home-icons travelers" icon="group" icon-color="primary">
           <q-input
-            v-model="numberOfPassengers"
+            v-model="numberOfTravelers"
             type="number"
             min="1"
             max="10"
@@ -171,7 +171,7 @@ export default {
       departureDate: new Date(),
       returnDate: new Date(),
       suggestionList: parseAirports(),
-      numberOfPassengers: 1,
+      numberOfTravelers: 1,
       isRoundTrip: "false"
     };
   },
@@ -187,7 +187,8 @@ export default {
           departure: this.departureCity,
           arrival: this.arrivalCity,
           returnDate: date.formatDate(this.returnDate, "YYYY-MM-DD"), 
-          isRoundTrip: this.isRoundTrip
+          isRoundTrip: this.isRoundTrip,
+          numberOfTravelers: this.numberOfTravelers
         }
       });
     },
