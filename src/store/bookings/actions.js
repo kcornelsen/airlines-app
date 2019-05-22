@@ -90,7 +90,7 @@ export function createBooking(
           data: {
             createBooking: {
               id: makeId(),
-              departureCity: outboundFlight.arrivalAirportCode,
+              departureCity: outboundFlight.departureCity,
               transactionDate: new Date().toISOString(),
               outboundFlight: outboundFlight,
               inboundFlight: inboundFlight

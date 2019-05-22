@@ -1,6 +1,7 @@
 import Flight from "../../shared/models/FlightClass";
 import axios from "axios";
 import uuid from 'uuid';
+import airports from './airports.json';
 
 /**
  *
@@ -59,6 +60,10 @@ function generateFlights(date, departureAirport, arrivalAirport) {
   arrivalDate.setMinutes(15);
   const uuidv4 = require('uuid/v4');
 
+
+  const arrival = airports.find(airport => airport.code === arrivalAirport);
+  const departure = airports.find(airport => airport.code === departureAirport);
+
   let flights = []
   var numberOfFlightsReturn = Math.floor(Math.random() * 4) + 1;
   for (var i = 0; i < numberOfFlightsReturn; i++) {
@@ -68,13 +73,13 @@ function generateFlights(date, departureAirport, arrivalAirport) {
     arrivalDate.setMinutes(arrivalDate.getMinutes() + 5);
     let flight = new Flight({
       arrivalAirportCode: arrivalAirport,
-      arrivalAirportName: arrivalAirport,
-      arrivalCity: arrivalAirport,
+      arrivalAirportName: arrival.name,
+      arrivalCity: arrival.city,
       arrivalDate: arrivalDate.toString(),
       arrivalLocale: "Europe/Madrid",
       departureAirportCode: departureAirport,
-      departureAirportName: departureAirport,
-      departureCity: departureAirport,
+      departureAirportName: departure.name,
+      departureCity: departure.city,
       departureDate: departureDate.toString(),
       departureLocale: "Europe/London",
       flightNumber: 1810 + i,
