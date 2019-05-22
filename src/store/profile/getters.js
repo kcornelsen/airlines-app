@@ -7,3 +7,7 @@ export const name = state => {
     let lastName = state.user.attributes.family_name;
     return firstName + " " + lastName;
 };
+
+export const firstName = state => {
+    return state.user.attributes.given_name;
+};

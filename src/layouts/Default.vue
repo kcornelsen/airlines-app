@@ -6,8 +6,8 @@
           <q-icon name="menu"/>
         </q-btn>
         <q-toolbar-title class="brand text-bold">Flight App</q-toolbar-title>
-        <div v-if="user">
-          <label>Hi {{ user.username }} </label>
+        <div v-if="isAuthenticated">
+          <label>Hi {{ firstName }} ! </label>
         </div>
         <div v-else>
           <q-btn flat size="md" icon="account_circle" label="Sign In" :to="{ name: 'profile' }"/>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -53,6 +53,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("profile", ["isAuthenticated", "firstName"]),
     ...mapState({
       user: state => state.profile.user
     })
