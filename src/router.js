@@ -7,7 +7,9 @@ import ReturnFlightResults from "./views/ReturnFlightResults.vue";
 import FlightResults from "./views/FlightResults.vue";
 import FlightSelection from "./views/FlightSelection.vue";
 import Bookings from "./views/Bookings.vue";
-import Auth from "./views/Authentication.vue";
+import SignIn from "./views/SignIn.vue";
+import SignUp from "./views/SignUp.vue";
+import Forgot from "./views/Forgot.vue";
 import store from "./store";
 
 Vue.use(Router);
@@ -55,12 +57,24 @@ const router = new Router({
                     meta: { requiresAuth: true }
                 },
                 {
-                    path: "/auth",
-                    name: "auth",
-                    component: Auth,
-                    props: route => ({ ...route.params, ...route.query })
+                    path: "/login",
+                    name: "login",
+                    component: SignIn,
+                    props: route => ({ ...route.params, ...route.query })   
+                },
+                {
+                    path: "/signUp",
+                    name: "signUp",
+                    component: SignUp,
+                    props: route => ({ ...route.params, ...route.query })   
+                },
+                {
+                    path: "/reset-password",
+                    name: "forgot",
+                    component: Forgot,
+                    props: route => ({ ...route.params, ...route.query })   
                 }
-
+                
             ]
         }
     ]
@@ -81,7 +95,7 @@ router.beforeEach(async (to, from, next) => {
                 await store.dispatch("profile/getSession");
                 next();
             } catch (err) {
-                next({ name: "auth", query: { redirectTo: to.name } });
+                next({ name: "login", query: { redirectTo: to.name } });
             }
         }
     }
