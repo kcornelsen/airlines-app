@@ -10,7 +10,7 @@
           <label>Hi {{ firstName }} ! </label>
         </div>
         <div v-else>
-          <q-btn flat size="md" icon="account_circle" label="Sign In" :to="{ name: 'profile' }"/>
+          <q-btn flat size="md" icon="account_circle" label="Sign In" :to="{ name: 'login' }"/>
         </div>
       </q-toolbar>
     </q-layout-header>

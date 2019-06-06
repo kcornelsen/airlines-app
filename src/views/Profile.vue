@@ -127,7 +127,7 @@ export default {
         this.$store
           .dispatch("profile/getSession")
           .catch(
-            this.$router.push({ name: "auth", query: { redirectTo: "home" } })
+            this.$router.push({ name: "login", query: { redirectTo: "home" } })
           );
       }
     });
