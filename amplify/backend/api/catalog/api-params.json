@@ -1,0 +1,34 @@
+{
+    "paths": [
+        {
+            "name": "/flights",
+            "lambdaFunction": "airlineFlights",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "catalog",
+    "apiName": "catalog",
+    "functionArns": [
+        {
+            "lambdaFunction": "airlineFlights"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "airline-test-20190506184220-authRole",
+        "unAuthRoleName": "airline-test-20190506184220-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "airlineFlights",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

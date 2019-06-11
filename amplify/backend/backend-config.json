@@ -18,6 +18,28 @@
 			"output": {
 				"securityType": "AMAZON_COGNITO_USER_POOLS"
 			}
+		},
+		"catalog": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "airlineFlights",
+					"attributes": [
+						"Name",
+						"Arn"
+					]
+				}
+			]
+		}
+	},
+	"function": {
+		"airlineFlights": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": []
 		}
 	}
 }

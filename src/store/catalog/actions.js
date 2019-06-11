@@ -1,8 +1,7 @@
 import Flight from "../../shared/models/FlightClass";
 import axios from "axios";
-import uuid from 'uuid';
-import airports from './airports.json';
-
+import airports from "./airports.json";
+import API from "@aws-amplify/api";
 /**
  *
  * Catalog [Vuex Module Action](https://vuex.vuejs.org/guide/actions.html) - fetchFlights retrieves all flights for a given date, departure and arrival from Catalog service.
@@ -23,73 +22,66 @@ import airports from './airports.json';
 export function fetchFlights({ commit }, { date, departure, arrival }) {
   return new Promise(async (resolve, reject) => {
     commit("SET_LOADER", true);
-    try {
-      let flights = generateFlights(date, departure, arrival)
-      commit("SET_FLIGHTS", flights);
-      commit("SET_LOADER", false);
-      resolve();
-    } catch (error) {
-      console.error(error);
-      commit("SET_LOADER", false);
-      reject(error);
-    }
+
+    const arrivalAirport = airports.find(airport => airport.code === arrival);
+    const departureAirport = airports.find(airport => airport.code === departure);
+    let myInit = {
+      queryStringParameters: {
+        arrivalAirportCode: arrival,
+        arrivalAirportName: arrivalAirport.name,
+        arrivalCity: arrivalAirport.city,
+        departureAirportCode: departure,
+        departureAirportName: departureAirport.name,
+        departureCity: departureAirport.city,
+        date: date
+      }
+    };
+
+    API.get("catalog", "/flights", myInit)
+      .then(response => {
+        const flights = response.flights.map(flight => new Flight(flight));
+        commit("SET_FLIGHTS", flights);
+        commit("SET_LOADER", false);
+        resolve();
+      })
+      .catch(error => {
+        console.error(error);
+        commit("SET_LOADER", false);
+        reject(error);
+      });
   });
 }
 
 export function fetchReturnFlights({ commit }, { date, departure, arrival }) {
   return new Promise(async (resolve, reject) => {
     commit("SET_LOADER", true);
-    try {
-      let flights = generateFlights(date, departure, arrival)
-      commit("SET_RETURN_FLIGHTS", flights);
-      commit("SET_LOADER", false);
-      resolve();
-    } catch (error) {
-      console.error(error);
-      commit("SET_LOADER", false);
-      reject(error);
-    }
+    const arrivalAirport = airports.find(airport => airport.code === arrival);
+    const departureAirport = airports.find(airport => airport.code === departure);
+    let myInit = {
+      queryStringParameters: {
+        arrivalAirportCode: arrival,
+        arrivalAirportName: arrivalAirport.name,
+        arrivalCity: arrivalAirport.city,
+        departureAirportCode: departure,
+        departureAirportName: departureAirport.name,
+        departureCity: departureAirport.city,
+        date: date
+      }
+    };
+
+    API.get("catalog", "/flights", myInit)
+      .then(response => {
+        const flights = response.flights.map(flight => new Flight(flight));
+        commit("SET_RETURN_FLIGHTS", flights);
+        commit("SET_LOADER", false);
+        resolve();
+      })
+      .catch(error => {
+        console.error(error);
+        commit("SET_LOADER", false);
+        reject(error);
+      });
   });
-}
-
-function generateFlights(date, departureAirport, arrivalAirport) {
-  let departureDate = new Date(date)
-  departureDate.setHours(6);
-  let arrivalDate = new Date(date)
-  arrivalDate.setHours(10);
-  arrivalDate.setMinutes(15);
-  const uuidv4 = require('uuid/v4');
-
-
-  const arrival = airports.find(airport => airport.code === arrivalAirport);
-  const departure = airports.find(airport => airport.code === departureAirport);
-
-  let flights = []
-  var numberOfFlightsReturn = Math.floor(Math.random() * 4) + 1;
-  for (var i = 0; i < numberOfFlightsReturn; i++) {
-
-    departureDate.setHours(departureDate.getHours() + 1);
-    arrivalDate.setHours(arrivalDate.getHours() + 1);
-    arrivalDate.setMinutes(arrivalDate.getMinutes() + 5);
-    let flight = new Flight({
-      arrivalAirportCode: arrivalAirport,
-      arrivalAirportName: arrival.name,
-      arrivalCity: arrival.city,
-      arrivalDate: arrivalDate.toString(),
-      arrivalLocale: "Europe/Madrid",
-      departureAirportCode: departureAirport,
-      departureAirportName: departure.name,
-      departureCity: departure.city,
-      departureDate: departureDate.toString(),
-      departureLocale: "Europe/London",
-      flightNumber: 1810 + i,
-      id: uuidv4(),
-      ticketCurrency: "USD",
-      ticketPrice: Math.floor(Math.random() * (300 - 80 + 1) + 80)
-    })
-    flights.push(flight)
-  }
-  return flights;
 }
 
 /**
@@ -108,10 +100,7 @@ function generateFlights(date, departureAirport, arrivalAirport) {
  * @returns {promise} - Promise representing flight from Catalog service.
  * @see {@link SET_LOADER} for more info on mutation
  */
-export function fetchByFlightNumber(
-  { commit },
-  { date, departure, arrival, flightNumber }
-) {
+export function fetchByFlightNumber({ commit }, { flightNumber }) {
   return new Promise(async (resolve, reject) => {
     try {
       commit("SET_LOADER", true);
@@ -130,11 +119,7 @@ export function fetchByFlightNumber(
   });
 }
 
-
-export function fetchByReturnFlightNumber(
-  { commit },
-  { date, departure, arrival, flightNumber }
-) {
+export function fetchByReturnFlightNumber({ commit }, { flightNumber }) {
   return new Promise(async (resolve, reject) => {
     try {
       commit("SET_LOADER", true);
